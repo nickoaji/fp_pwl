@@ -9,6 +9,8 @@ class Login extends CI_Controller
   {
     parent::__construct();
     $this->load->model('User_model');
+    $this->load->library('session');
+    $this->load->library('form_validation');
   }
   public function index()
   {
@@ -16,9 +18,9 @@ class Login extends CI_Controller
   }
   public function cek_login()
   {
-    $email = $this->input->post('email');
+    $username = $this->input->post('username');
     $password = $this->input->post('password');
-    $cek = $this->User_model->cek_user($email, sha1($password));
+    $cek = $this->User_model->cek_user($username, sha1($password));
     if ($cek->num_rows() > 0) {
       $data_json = array('sukses' => 'Ya', 'pesan' => 'Sukses Login !!!', 'user' => $cek->row_array());
     } else {
@@ -31,11 +33,11 @@ class Login extends CI_Controller
     $this->load->library('session');
 
     $id_user = $this->input->post('id_user');
-    $email_user = $this->input->post('email_user');
+    $uname_user = $this->input->post('uname_user');
     $role_id = $this->input->post('role_id');
 
     $this->session->set_userdata('id_user', $id_user);
-    $this->session->set_userdata('email_user', $email_user);
+    $this->session->set_userdata('uname_user', $uname_user);
     $this->session->set_userdata('role_id', $role_id);
   }
   public function logout()

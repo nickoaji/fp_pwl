@@ -19,8 +19,8 @@
     <div class="ml-auto mr-5">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a href="index.php/dashboard" class="nav-link">
-            <a href="<?php echo base_url(); ?>login"><button class="btn" id="our_dashboard_btn">Login</button></a>
+          <a href="<?php echo base_url(); ?>login" class="nav-link">
+            <button class="btn" id="our_dashboard_btn">Login</button>
 
           </a>
         </li>
@@ -34,28 +34,57 @@
 
           <div id="heading_title" class="text-center">
             <h1 id="heading">Search your URL</h1>
-            <p id="title">Search your URL by title or short url which you have remember.</p>
+            <p id="title">Search your URL by title.</p>
           </div>
 
           <form>
             <div class="form-row">
               <div class="col">
-                <input type="text" class="form-control form-input-cari" placeholder="Enter Title" name="cari_title">
+                <input type="text" class="form-control form-input-cari" placeholder="Enter Title" name="cari_title" id="cari_title">
               </div>
-              <div class="col">
-                <input type="text" class="form-control form-input-cari" placeholder="Enter Original Url" name="cari_url">
-              </div>
-              <button class="btn" id="btn_cari">Cari Link</button>
+              <button type="submit" class="btn" id="btn_cari">Cari Link</button>
             </div>
           </form>
-          <br />
-          <a href="<?php echo base_url(); ?>guest/form_create"><button class="btn" id="btn_create">Create Short Link</button></a>
+          <hr />
+          <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#myModal">Add Short Link</button>
           <hr />
           <h4>Dibawah Ini Adalah Data Guest URL</h4>
-          <table id="guest_url" class="table">
-          </table>
+          <div class="table-responsive">
+            <table id="guest_url" class="table table-bordered">
+            </table>
+          </div>
+
+          <!-- insert data -->
+          <div class="modal fade save" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3>Masukkan Data Url</h3>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="form-group">
+                      <label for="ttl">Title</label>
+                      <input type="text" class="form-control" name="ttl" id="ttl" placeholder="Masukkan title" required autofocus>
+
+                    </div>
+                    <div class="form-group">
+                      <label for="url">Url</label>
+                      <input type="url" class="form-control" id="url" placeholder="Masukkan URL" required autofocus>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="save">Tambah</button>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+        <!-- end insert data -->
       </div>
+    </div>
     </div>
   </section>
 
@@ -66,10 +95,10 @@
       $.ajax(url, {
         type: 'GET',
         success: function(data, status, xhr) {
-          // parse object menjadi json
+
           var objData = JSON.parse(data);
           $('#guest_url').html(objData.konten);
-          reload_event();
+
         },
         error: function(jqXHR, textStatus, errorMsg) {
           alert('Error : ' + errorMsg);
@@ -77,15 +106,31 @@
       })
     }
     loadKonten('<?php echo base_url(); ?>guest/list_guest');
-
-    function reload_event() {
-      $('#btn_cari').on('click', function() {
-        cariData();
+    //insert data
+    $('#save').on('click', function(e) {
+      e.preventDefault()
+      var ttl = $('#ttl').val();
+      var url = $('#url').val();
+      $.ajax({
+        type: "POST",
+        url: "<?php echo base_url() ?>guest/save",
+        data: {
+          ttl: ttl,
+          url: url
+        },
+        success: function(data) {
+          $('#ttl').val('');
+          $('#url').val('');
+          $('.modal').modal('hide');
+          loadKonten('<?php echo base_url(); ?>guest/list_guest');
+        }
       });
-    }
+    });
 
-    function cariData() {
-      var url = 'http://localhost/fp_pwl/guest/cari_guest';
+    // cari_data
+    $('#btn_cari').on('click', function(e) {
+      e.preventDefault()
+      var url = 'http://localhost/fp_pwl/guest/cari_data';
       var dataForm = {};
       var allInput = $('.form-input-cari');
       $.each(allInput, function(i, val) {
@@ -97,13 +142,13 @@
         success: function(data, status, xhr) {
           var objData = JSON.parse(data);
           $('#guest_url').html(objData.konten);
-          reload_event();
+
         },
         error: function(jqXHR, textStatus, errorMsg) {
           alert('Error : ' + errorMsg);
         }
-      })
-    }
+      });
+    });
   </script>
 
 </body>

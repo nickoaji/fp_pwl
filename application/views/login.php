@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PWL</title>
+  <title>Login | Pendek.in</title>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
@@ -23,9 +23,9 @@
           <form class="form-horizontal form-material" id="formLogin">
 
             <div class="form-group">
-              <label for="example-email" class="col-md-12">Email</label>
+              <label for="username" class="col-md-12">Username</label>
               <div class="col-md-12">
-                <input type="email" placeholder="Enter Your Email" class="form-user-input form-control form-control-line" name="email" id="example-email" required>
+                <input type="text" placeholder="Enter Your Username" class="form-user-input form-control form-control-line" name="username" id="username" required>
               </div>
             </div>
             <div class="form-group">
@@ -87,7 +87,7 @@
       var link = "<?php echo base_url(); ?>login/setSession";
       var dataForm = {};
       dataForm['id_user'] = user['id'];
-      dataForm['email_user'] = user['email'];
+      dataForm['uname_user'] = user['username'];
       dataForm['role_id'] = user['role_id'];
 
       $.ajax(link, {

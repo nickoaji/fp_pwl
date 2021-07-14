@@ -3,22 +3,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Guest_model extends CI_Model
 {
-  public function get_guest($cari_title = '', $cari_url = '')
+  public function get_guest($title = '')
   {
     $this->db->select('*');
     $this->db->from('urls_guest');
-    if ($cari_title != '' && $cari_title != null) {
-      $this->db->like('title', $cari_title);
-    }
-    if ($cari_url != '' && $cari_url != null) {
-      $this->db->like('original_link', $cari_url);
+    if ($title != '' && $title != null) {
+      $this->db->like('title', $title);
     }
     return $this->db->get();
   }
-  public function insert_data($data)
+  function save_data($table, $data)
   {
-    $this->db->insert('urls_guest', $data);
+    $this->db->insert($table, $data);
   }
+
   public function get_url($hash)
   {
     $this->db->select('*');
