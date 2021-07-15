@@ -42,6 +42,7 @@
                 <button class="btn btn-success">LOGIN</button>
               </div>
             </div>
+            Belum Punya Akun ? <a href="<?php echo base_url(); ?>register">Register</a>
           </form>
         </div>
       </div>

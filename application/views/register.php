@@ -44,6 +44,7 @@
                 <button class="btn btn-success" id="reg">REGISTER</button>
               </div>
             </div>
+            Sudah Punya Akun ? <a href="<?php echo base_url(); ?>login">Login</a>
           </form>
         </div>
       </div>
