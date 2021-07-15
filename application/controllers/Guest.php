@@ -14,11 +14,22 @@ class Guest extends CI_Controller
   }
   public function index()
   {
-    $this->session->userdata('role_id');
-    if ($this->session->userdata('role_id') != 2) {
-      $this->load->view('guest/guest');
-    } else {
-      redirect('user');
+    // $this->session->userdata('role_id');
+    // if ($this->session->userdata('role_id') != 2) {
+    //   $this->load->view('guest/guest');
+    // } else {
+    //   redirect('user');
+    // }
+    switch ($this->session->userdata('role_id')) {
+      case '1':
+        $this->load->view('admin/dasb');
+        break;
+      case '2':
+        $this->load->view('user/user_dasb');
+        break;
+      default:
+        $this->load->view('guest/guest');
+        break;
     }
   }
   public function list_guest()
@@ -50,7 +61,7 @@ class Guest extends CI_Controller
   function save()
   {
     $data = array(
-      'hash' => uniqid(), // creates a random key
+      'hash' => uniqid() . 'guest', // creates a random key
       'title'     => $this->input->post('ttl'),
       'original_link'    => $this->input->post('url'),
     );

@@ -12,11 +12,22 @@ class User extends CI_Controller
   }
   public function index()
   {
-    $this->session->userdata('role_id');
-    if ($this->session->userdata('role_id') == 2) {
-      $this->load->view('user/user_dasb');
-    } else {
-      redirect('login');
+    // $this->session->userdata('role_id');
+    // if ($this->session->userdata('role_id') == 2) {
+    //   $this->load->view('user/user_dasb');
+    // } else {
+    //   redirect('login');
+    // }
+    switch ($this->session->userdata('role_id')) {
+      case '1':
+        $this->load->view('admin/dasb');
+        break;
+      case '2':
+        $this->load->view('user/user_dasb');
+        break;
+      default:
+        $this->load->view('guest/guest');
+        break;
     }
   }
   public function list_url()

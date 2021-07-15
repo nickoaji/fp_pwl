@@ -16,6 +16,10 @@ class Login extends CI_Controller
   {
     $this->load->view('login');
   }
+  public function reg()
+  {
+    $this->load->view('register');
+  }
   public function cek_login()
   {
     $username = $this->input->post('username');
@@ -27,6 +31,16 @@ class Login extends CI_Controller
       $data_json = array('sukses' => 'Tidak', 'pesan' => 'Username atau Password Tidak Terdaftar !!!');
     }
     echo json_encode($data_json);
+  }
+  public function cek_register()
+  {
+    $password = $this->input->post('password');
+    $data = array(
+      'email'    => $this->input->post('email'),
+      'username'     => $this->input->post('username'),
+      'password' => sha1($password),
+    );
+    $this->User_model->register('users', $data);
   }
   public function setSession()
   {

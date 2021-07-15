@@ -30,6 +30,10 @@ class User_model extends CI_Model
   {
     $this->db->insert($table, $data);
   }
+  function register($table, $data)
+  {
+    $this->db->insert($table, $data);
+  }
   public function get_url($hash)
   {
     $this->db->select('*');
