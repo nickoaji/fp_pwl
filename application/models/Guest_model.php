@@ -12,9 +12,15 @@ class Guest_model extends CI_Model
     }
     return $this->db->get();
   }
-  function save_data($table, $data)
+  function save_data($hash, $title, $original_link, $image_name)
   {
-    $this->db->insert($table, $data);
+    $data = array(
+      'hash' => $hash,
+      'title' => $title,
+      'original_link' => $original_link,
+      'qr_code' => $image_name,
+    );
+    $this->db->insert('urls_guest', $data);
   }
 
   public function get_url($hash)

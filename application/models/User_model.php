@@ -26,9 +26,16 @@ class User_model extends CI_Model
     }
     return $this->db->get();
   }
-  function save_data($table, $data)
+  function save_data($hash, $title, $original_link, $user_id, $image_name)
   {
-    $this->db->insert($table, $data);
+    $data = array(
+      'hash' => $hash,
+      'title' => $title,
+      'original_link' => $original_link,
+      'user_id' => $user_id,
+      'qr_code' => $image_name,
+    );
+    $this->db->insert('urls', $data);
   }
   function register($table, $data)
   {
@@ -55,11 +62,17 @@ class User_model extends CI_Model
   {
     return $this->db->get_where($table, array('hash' => $hash))->row();
   }
-  public function update_data($table, $data, $original_link)
+  public function update_data($original_link, $hash, $title, $image_name)
   {
+    $data = array(
+      'hash' => $hash,
+      'title' => $title,
+      'original_link' => $original_link,
+      'qr_code' => $image_name,
+    );
     $id = $this->session->userdata('id_user');
     $this->db->where('user_id', $id);
     $this->db->where('original_link', $original_link);
-    return $this->db->update($table, $data);
+    return $this->db->update('urls', $data);
   }
 }

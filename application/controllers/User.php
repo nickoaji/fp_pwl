@@ -37,6 +37,7 @@ class User extends CI_Controller
                 <th>Short Link</th>
                 <th>Title</th>
                 <th>Original Link</th>
+                <th>QR Code</th>
                 <th>Total Clicked</th>
                 <th>Aksi</th>
               </tr></thead>';
@@ -45,6 +46,7 @@ class User extends CI_Controller
         <td><a href="' . $value->hash . '">' . 'http://localhost/fp_pwl/' . $value->hash . '</a></td>
         <td>' . $value->title . '</td>
         <td>' . $value->original_link . '</td>
+        <td><img style="width: 100px;" src="http://localhost/fp_pwl/assets/images/' . $value->qr_code . '"></td>
         <td>' . $value->total_clicked . '</td>
         <td><a data="' . $value->hash . '" class="linkHapusUrl">Hapus</a> 
         | <a data="' . $value->hash . '" class="linkEditUrl" >Edit</a></td>
@@ -57,13 +59,34 @@ class User extends CI_Controller
   }
   function save()
   {
-    $data = array(
-      'hash' => uniqid(), // creates a random key
-      'title'     => $this->input->post('ttl'),
-      'original_link'    => $this->input->post('url'),
-      'user_id' => $this->session->userdata('id_user')
-    );
-    $this->User_model->save_data('urls', $data);
+
+    $hash = uniqid(); // creates a random key
+    $title     = $this->input->post('ttl');
+    $original_link    = $this->input->post('url');
+    $user_id = $this->session->userdata('id_user');
+
+    $this->load->library('ciqrcode');
+
+    $config['cacheable']    = true; //boolean, the default is true
+    $config['cachedir']     = './assets/'; //string, the default is application/cache/
+    $config['errorlog']     = './assets/'; //string, the default is application/logs/
+    $config['imagedir']     = './assets/images/'; //direktori penyimpanan qr code
+    $config['quality']      = true; //boolean, the default is true
+    $config['size']         = '1024'; //interger, the default is 1024
+    $config['black']        = array(224, 255, 255); // array, default is array(255,255,255)
+    $config['white']        = array(70, 130, 180); // array, default is array(0,0,0)
+
+    $this->ciqrcode->initialize($config);
+
+    $image_name = $hash . '.png'; //buat name dari qr code sesuai dengan nim
+
+    $params['data'] = 'http://localhost/fp_pwl/' . $hash; //data yang akan di jadikan QR CODE
+    $params['level'] = 'H'; //H=High
+    $params['size'] = 10;
+    $params['savename'] = FCPATH . $config['imagedir'] . $image_name; //simpan image QR CODE ke folder assets/images/
+    $this->ciqrcode->generate($params); // fungsi untuk generate QR CODE
+
+    $this->User_model->save_data($hash, $title, $original_link, $user_id, $image_name);
   }
 
   public function redirect($hash)
@@ -95,12 +118,32 @@ class User extends CI_Controller
   function update()
   {
     $original_link = $this->input->post('original_link');
-    $data = array(
-      'hash' => $this->input->post('hash'),
-      'title'     => $this->input->post('title'),
-    );
 
-    $this->User_model->update_data('urls', $data, $original_link);
+    $hash = $this->input->post('hash');
+    $title     = $this->input->post('title');
+
+    $this->load->library('ciqrcode');
+
+    $config['cacheable']    = true; //boolean, the default is true
+    $config['cachedir']     = './assets/'; //string, the default is application/cache/
+    $config['errorlog']     = './assets/'; //string, the default is application/logs/
+    $config['imagedir']     = './assets/images/'; //direktori penyimpanan qr code
+    $config['quality']      = true; //boolean, the default is true
+    $config['size']         = '1024'; //interger, the default is 1024
+    $config['black']        = array(224, 255, 255); // array, default is array(255,255,255)
+    $config['white']        = array(70, 130, 180); // array, default is array(0,0,0)
+
+    $this->ciqrcode->initialize($config);
+
+    $image_name = $hash . '.png'; //buat name dari qr code sesuai dengan nim
+
+    $params['data'] = 'http://localhost/fp_pwl/' . $hash; //data yang akan di jadikan QR CODE
+    $params['level'] = 'H'; //H=High
+    $params['size'] = 10;
+    $params['savename'] = FCPATH . $config['imagedir'] . $image_name; //simpan image QR CODE ke folder assets/images/
+    $this->ciqrcode->generate($params); // fungsi untuk generate QR CODE
+
+    $this->User_model->update_data($original_link, $hash, $title, $image_name);
   }
   public function cari_data()
   {
@@ -111,6 +154,7 @@ class User extends CI_Controller
                 <th>Short Link</th>
                 <th>Title</th>
                 <th>Original Link</th>
+                <th>QR Code</th>
                 <th>Total Clicked</th>
                 <th>Aksi</th>
               </tr></thead>';
@@ -119,6 +163,7 @@ class User extends CI_Controller
         <td><a href="' . $value->hash . '">' . 'http://localhost/fp_pwl/' . $value->hash . '</a></td>
         <td>' . $value->title . '</td>
         <td>' . $value->original_link . '</td>
+        <td><img style="width: 100px;" src="http://localhost/fp_pwl/assets/images/' . $value->qr_code . '"></td>
         <td>' . $value->total_clicked . '</td>
         <td><a data="' . $value->hash . '" class="linkHapusUrl">Hapus</a> 
         | <a data="' . $value->hash . '" class="linkEditUrl" >Edit</a></td>

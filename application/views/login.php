@@ -95,7 +95,7 @@
         type: 'POST',
         data: dataForm,
         success: function(data, status, xhr) {
-          location.replace('<?php echo base_url(); ?>guest');
+          location.replace('<?php echo base_url(); ?>');
         },
         error: function(jqXHR, textStatus, errorMsg) {
           alert('Error: ' + errorMsg);
